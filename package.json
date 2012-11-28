@@ -17,11 +17,12 @@
         "mambo": "0.0.5",
         "up": "0.2.2",
         "counterman-client": "0.0.2",
-        "forro": "0.0.1",
         "when": "git://github.com/exfm/when.git",
         "junto": "git+ssh://git@github.com/exfm/node-junto.git",
         "nurse": "git://github.com/exfm/node-nurse.git",
-        "express-winston": "0.1.2"
+        "redis": "0.8.2",
+        "express-winston": "0.1.2",
+        "shuffle": "git+ssh://git@github.com/exfm/shuffle.git"
     },
     "devDependencies": {
         "mocha": "1.6.0",
@@ -61,8 +62,8 @@
         {
             "alias": "petrucci",
             "table": "Petrucci",
-            "hashName": "id",
-            "hashType": "N",
+            "hashName": "token",
+            "hashType": "S",
             "read": 550,
             "write": 150
         }

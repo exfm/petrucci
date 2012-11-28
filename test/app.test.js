@@ -31,41 +31,41 @@ function get(path){
 }
 
 describe("API", function(){
-    before(function(done){
-        helpers.setup(done);
-    });
+    // before(function(done){
+    //     helpers.setup(done);
+    // });
 
-    after(function(done){
-        helpers.teardown(done);
-    });
+    // after(function(done){
+    //     helpers.teardown(done);
+    // });
 
-    describe("create", function(){
-        it("should create a petrucci", function(done){
-            post('/')
-                .send({'title': "a title"})
-                .end(function(res){
-                    assert.equal(200, res.status);
-                    assert.equal("a title", res.body.title);
-                    done();
-            });
-        });
-    });
+    // describe("create", function(){
+    //     it("should to a playset", function(done){
+    //         post('/')
+    //             .send({'title': "a title"})
+    //             .end(function(res){
+    //                 assert.equal(200, res.status);
+    //                 assert.equal("a title", res.body.title);
+    //                 done();
+    //         });
+    //     });
+    // });
 
-    describe("get", function(){
-        var petrucci;
-        before(function(done){
-            helpers.createPetrucci().then(function(data){
-                petrucci = data;
-                done();
-            });
-        });
-        it("should get a petrucci by id", function(done){
-            get("/" + petrucci.id)
-                .end(function(res){
-                    assert.equal(200, res.status);
-                    assert.equal(petrucci.title, res.body.title);
-                    done();
-                });
-        });
-    });
+    // describe("get", function(){
+    //     var petrucci;
+    //     before(function(done){
+    //         helpers.createPetrucci().then(function(data){
+    //             petrucci = data;
+    //             done();
+    //         });
+    //     });
+    //     it("should get new songs by token", function(done){
+    //         get("/" + petrucci.id)
+    //             .end(function(res){
+    //                 assert.equal(200, res.status);
+    //                 assert.equal(petrucci.title, res.body.title);
+    //                 done();
+    //             });
+    //     });
+    // });
 });
