@@ -23,13 +23,15 @@ describe("Model", function(){
         redisBridge.connect(redisInfo.host, redisInfo.port, 0);
     });
 
-    after(function(done){
+    afterEach(function(done){
         helpers.teardown(done);
     });
 
     it("should subscribe to a playset by token", function(done){
-        var token = 'grmnygrmny:user:dan:0';
+        var token = 'grmnygrmny:user:dan:0',
+            channel = 'dan:loved';
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
+            helpers.petrucciChannels.push(channel);
             console.log(petrucci);
             done();
         }, assert.fail);
@@ -38,9 +40,11 @@ describe("Model", function(){
     it("should get subscribed tokens for a channel", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
+
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
+            helpers.petrucciChannels.push(channel);
             console.log(petrucci);
             Petrucci.getTokens(channel).then(function(petrucci){
                 assert.deepEqual([token], petrucci.tokens);

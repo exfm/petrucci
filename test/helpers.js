@@ -38,7 +38,7 @@ magneto.server = null;
 
 var server = null;
 
-exports.petrucciIds = [];
+exports.petrucciChannels = [];
 
 exports.setup = function(cb){
     sequence().then(function(next){
@@ -88,7 +88,7 @@ exports.createPetrucci = function(opts){
         opts.title = "a title";
     }
     Petrucci.create(opts).then(function(petrucci){
-        exports.petrucciIds.push(petrucci.id);
+        exports.petrucciChannels.push(petrucci.channel);
         d.resolve(petrucci);
     }, function(err){
         throw new Error(err);
@@ -98,11 +98,11 @@ exports.createPetrucci = function(opts){
 
 exports.teardownPetruccis = function(){
     var d = when.defer();
-    if(exports.petrucciIds.length === 0){
+    if(exports.petrucciChannels.length === 0){
         return d.resolve();
     }
-    when.all(exports.petrucciIds.map(function(id){
-        return Petrucci.destroy(id);
+    when.all(exports.petrucciChannels.map(function(channel){
+        return Petrucci.destroy(channel);
     }), function(){
         d.resolve();
     });
