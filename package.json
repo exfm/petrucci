@@ -1,6 +1,6 @@
 {
     "author": " <>",
-    "name": "node-petrucci",
+    "name": "petrucci",
     "description": "Redis event watcher",
     "version": "0.0.0",
     "homepage": "http://github.com/exfm/node-petrucci",
@@ -59,8 +59,8 @@
     },
     "model": [
         {
-            "alias": "node-petrucci",
-            "table": "Node-petrucci",
+            "alias": "petrucci",
+            "table": "Petrucci",
             "hashName": "id",
             "hashType": "N",
             "read": 550,

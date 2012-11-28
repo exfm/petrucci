@@ -16,7 +16,7 @@ var when = require('when'),
     getConfig = require("junto"),
     magneto = require('magneto');
 
-var Node-petrucci = exports.covRequire('../lib/model'),
+var Petrucci = exports.covRequire('../lib/model'),
     app = exports.covRequire('../lib/app');
 
 nconf.defaults({
@@ -47,9 +47,9 @@ exports.setup = function(cb){
             next();
         });
     }).then(function(next){
-        Node-petrucci.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
+        Petrucci.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
             nconf.get('TABLE_PREFIX'));
-        Node-petrucci.createAll().then(function(){
+        Petrucci.createAll().then(function(){
             next();
         });
     }).then(function(next){
@@ -67,7 +67,7 @@ exports.setup = function(cb){
 };
 
 exports.teardown = function(cb){
-    exports.teardownNode-petruccis().then(function(){
+    exports.teardownPetruccis().then(function(){
         cb();
     });
 };
@@ -76,30 +76,30 @@ function randint(){
     return parseInt(Math.random() * 100000000000, 10);
 }
 
-exports.node-petrucciIds = [];
+exports.petrucciIds = [];
 
-exports.createNode-petrucci = function(opts){
+exports.createPetrucci = function(opts){
     opts = opts || {};
     var d = when.defer();
     if(!opts.hasOwnProperty('title')){
         opts.title = "a title";
     }
-    Node-petrucci.create(opts).then(function(node-petrucci){
-        exports.node-petrucciIds.push(node-petrucci.id);
-        d.resolve(node-petrucci);
+    Petrucci.create(opts).then(function(petrucci){
+        exports.petrucciIds.push(petrucci.id);
+        d.resolve(petrucci);
     }, function(err){
         throw new Error(err);
     });
     return d.promise;
 };
 
-exports.teardownNode-petruccis = function(){
+exports.teardownPetruccis = function(){
     var d = when.defer();
-    if(exports.node-petrucciIds.length === 0){
+    if(exports.petrucciIds.length === 0){
         return d.resolve();
     }
-    when.all(exports.node-petrucciIds.map(function(id){
-        return Node-petrucci.destroy(id);
+    when.all(exports.petrucciIds.map(function(id){
+        return Petrucci.destroy(id);
     }), function(){
         d.resolve();
     });

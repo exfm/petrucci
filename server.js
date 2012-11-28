@@ -1,7 +1,7 @@
 "use strict";
 
 var app = require('./'),
-    Node-petrucci = app.model,
+    Petrucci = app.model,
     http = require('http'),
     nconf = require('nconf'),
     winston = require('winston'),
@@ -36,7 +36,7 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
         nconf.get("table_prefix"));
 
     if(nconf.get('MAMBO_BACKEND')){
-        Node-petrucci.createAll().then(function(){
+        Petrucci.createAll().then(function(){
             console.log('All tables created in magneto');
         });
     }

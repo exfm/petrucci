@@ -4,12 +4,12 @@ Redis event watcher
 
 ## Install
 
-     npm install node-petrucci
+     npm install petrucci
 
 ## Testing
 
-    git clone 
-    cd node-petrucci
+    git clone
+    cd petrucci
     npm install
     mocha
 

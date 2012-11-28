@@ -40,7 +40,7 @@ describe("API", function(){
     });
 
     describe("create", function(){
-        it("should create a node-petrucci", function(done){
+        it("should create a petrucci", function(done){
             post('/')
                 .send({'title': "a title"})
                 .end(function(res){
@@ -52,18 +52,18 @@ describe("API", function(){
     });
 
     describe("get", function(){
-        var node-petrucci;
+        var petrucci;
         before(function(done){
-            helpers.createNode-petrucci().then(function(data){
-                node-petrucci = data;
+            helpers.createPetrucci().then(function(data){
+                petrucci = data;
                 done();
             });
         });
-        it("should get a node-petrucci by id", function(done){
-            get("/" + node-petrucci.id)
+        it("should get a petrucci by id", function(done){
+            get("/" + petrucci.id)
                 .end(function(res){
                     assert.equal(200, res.status);
-                    assert.equal(node-petrucci.title, res.body.title);
+                    assert.equal(petrucci.title, res.body.title);
                     done();
                 });
         });
