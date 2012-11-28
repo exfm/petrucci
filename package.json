@@ -1,0 +1,71 @@
+{
+    "author": " <>",
+    "name": "node-petrucci",
+    "description": "Redis event watcher",
+    "version": "0.0.0",
+    "homepage": "http://github.com/exfm/node-petrucci",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/exfm/node-petrucci.git"
+    },
+    "dependencies": {
+        "sequence": "2.2.1",
+        "express": "3.0.1",
+        "nconf": "0.6.5",
+        "underscore": "1.4.2",
+        "winston": "0.6.2",
+        "mambo": "0.0.5",
+        "up": "0.2.2",
+        "counterman-client": "0.0.2",
+        "forro": "0.0.1",
+        "when": "git://github.com/exfm/when.git",
+        "junto": "git+ssh://git@github.com/exfm/node-junto.git",
+        "nurse": "git://github.com/exfm/node-nurse.git",
+        "express-winston": "0.1.2"
+    },
+    "devDependencies": {
+        "mocha": "1.6.0",
+        "magneto": "0.1.2",
+        "bunyan": "0.13.5",
+        "superagent": "0.9.8"
+    },
+    "scripts": {
+        "test": "grunt test",
+        "start": "./node_modules/.bin/up -n 1 -p 8080 --watch server.js --timeout 200"
+    },
+    "engines": {
+        "node": "*"
+    },
+    "cloudformation": {
+        "hostedZone": "internal-exfm.com.",
+        "bootstrapServerUrl": "ops.ex.fm",
+        "scaleUpThreshold": 70,
+        "scaleDownThreshold": 70,
+        "pricing": "On Demand",
+        "bid": null,
+        "evalPeriod": 300,
+        "numEvalPeriods": 2,
+        "minInstances": 4,
+        "maxInstances": 50,
+        "incrementBy": 4,
+        "availabilityZones": [
+            "us-east-1a",
+            "us-east-1b",
+            "us-east-1d",
+            "us-east-1e"
+        ],
+        "instanceType": "m1.large",
+        "amiId": "ami-64f7480d"
+    },
+    "model": [
+        {
+            "alias": "node-petrucci",
+            "table": "Node-petrucci",
+            "hashName": "id",
+            "hashType": "N",
+            "read": 550,
+            "write": 150
+        }
+    ]
+}
+
