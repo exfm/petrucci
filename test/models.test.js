@@ -6,21 +6,34 @@ var assert = require("assert"),
     crypto = require("crypto"),
     _ = require("underscore"),
     magneto = require('magneto'),
-    helpers = require("./helpers");
+    helpers = require("./helpers"),
+    redis = require("redis");
 
-var Petrucci = helpers.covRequire("../lib/model");
+var Petrucci = helpers.covRequire("../lib/model"),
+    redisBridge = require('../lib/redisbridge');
 
 
 describe("Model", function(){
-    // magneto.server = null;
+    magneto.server = null;
 
-    // before(function(done){
-    //     helpers.setup(done);
-    // });
+    var redisInfo = helpers.getRedisInfo();
 
-    // afterEach(function(done){
-    //     helpers.teardown(done);
-    // });
+    before(function(done){
+        helpers.setup(done);
+    });
+
+    after(function(done){
+        helpers.teardown(done);
+    });
+
+    it("should subscribe to a playset by token", function(done){
+        var token = 'grmnygrmny:user:dan:0';
+        Petrucci.subscribeToPlayset(token).then(function(petrucci){
+            console.log(petrucci);
+            done();
+        }, done);
+    });
+
     // describe("get", function(){
     //     it("should get a petrucci", function(done){
     //         sequence(this).then(function(next){
@@ -86,4 +99,22 @@ describe("Model", function(){
     //         });
     //     });
     // });
+});
+
+describe("Redis Bridge", function(){
+    var redisInfo = helpers.getRedisInfo();
+
+    before(function(done){
+        helpers.setup(done);
+    });
+
+    after(function(done){
+        helpers.teardown(done);
+    });
+
+    it("should subscribe to a channel", function(done){
+        var redis_client = redis.createClient(redisInfo.port, redisInfo.host);
+        redisBridge.connect(redisInfo.host, redisInfo.port, 0);
+        done();
+    });
 });

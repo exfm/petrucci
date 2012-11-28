@@ -14,7 +14,7 @@
         "nconf": "0.6.5",
         "underscore": "1.4.2",
         "winston": "0.6.2",
-        "mambo": "0.0.5",
+        "mambo": "0.0.8",
         "up": "0.2.2",
         "counterman-client": "0.0.2",
         "when": "git://github.com/exfm/when.git",
@@ -26,7 +26,7 @@
     },
     "devDependencies": {
         "mocha": "1.6.0",
-        "magneto": "0.1.2",
+        "magneto": "0.1.3",
         "bunyan": "0.13.5",
         "superagent": "0.9.8"
     },
@@ -64,8 +64,8 @@
             "table": "Petrucci",
             "hashName": "token",
             "hashType": "S",
-            "read": 550,
-            "write": 150
+            "read": 1,
+            "write": 1
         }
     ]
 }

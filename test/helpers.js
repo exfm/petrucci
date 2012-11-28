@@ -14,6 +14,8 @@ var when = require('when'),
     assert = require("assert"),
     nconf = require("nconf"),
     getConfig = require("junto"),
+    common = require('../lib/common'),
+    redisBridge = require('../lib/redisbridge'),
     magneto = require('magneto');
 
 var Petrucci = exports.covRequire('../lib/model'),
@@ -34,6 +36,8 @@ magneto.server = null;
 magneto.setLogLevel(50);
 
 var server = null;
+
+exports.petrucciIds = [];
 
 exports.setup = function(cb){
     sequence().then(function(next){
@@ -76,8 +80,6 @@ function randint(){
     return parseInt(Math.random() * 100000000000, 10);
 }
 
-exports.petrucciIds = [];
-
 exports.createPetrucci = function(opts){
     opts = opts || {};
     var d = when.defer();
@@ -104,4 +106,11 @@ exports.teardownPetruccis = function(){
         d.resolve();
     });
     return d.promise;
+};
+
+exports.getRedisInfo = function(){
+    return ({
+        'port': common.isLocal() ? 6379 : nconf.get("redis_port"),
+        'host': common.isLocal() ? 'localhost' : nconf.get("redis_host")
+    });
 };

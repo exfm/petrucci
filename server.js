@@ -46,8 +46,7 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
     redisBridge.connect(
         common.isLocal() ? 'localhost' : nconf.get("redis_host"),
         common.isLocal() ? 6379 : nconf.get("redis_port"),
-        0
-    );
+        0);
 });
 
 
