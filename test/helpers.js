@@ -19,6 +19,7 @@ var when = require('when'),
     magneto = require('magneto');
 
 var Petrucci = exports.covRequire('../lib/model'),
+    Shuffle = require('shuffle'),
     app = exports.covRequire('../lib/app');
 
 nconf.defaults({
