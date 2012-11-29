@@ -6,13 +6,18 @@ var assert = require("assert"),
     crypto = require("crypto"),
     _ = require("underscore"),
     magneto = require('magneto'),
-    helpers = require("./helpers");
+    helpers = require("./helpers"),
+    redis = require("redis");
 
-var Petrucci = helpers.covRequire("../lib/model");
+var Petrucci = helpers.covRequire("../lib/model"),
+    common = require("../lib/common"),
+    redisBridge = require('../lib/redisbridge');
 
 
 describe("Model", function(){
     magneto.server = null;
+
+    var redisInfo = helpers.getRedisInfo();
 
     before(function(done){
         helpers.setup(done);
@@ -21,69 +26,114 @@ describe("Model", function(){
     afterEach(function(done){
         helpers.teardown(done);
     });
-    describe("get", function(){
-        it("should get a petrucci", function(done){
-            sequence(this).then(function(next){
-                helpers.createPetrucci().then(next, assert.fail);
-            }).then(function(next, s){
-                helpers.petrucciIds.push(s.id);
-                Petrucci.get("petrucci", s.id).then(function(data){
-                    assert.equal(s.title, data.title);
-                    done();
-                }, assert.fail);
-            });
-        });
 
-        it("should get a petrucci by id", function(done){
-            var title = "this is a title";
-            sequence(this).then(function(next){
-                helpers.createPetrucci({'title': title}).then(next);
-            }).then(function(next, s){
-                Petrucci.getById(s.id).then(function(s){
-                    assert.equal(title, s.title);
-                    done();
-                });
-            });
+    it("should subscribe to a playset by token", function(done){
+        var token = 'nonexistantuser:user:totallyarealuser:0',
+            channel = common.getChannel(token),
+            redis_client = redis.createClient(redisInfo.port, redisInfo.host),
+            subscribeCallback;
+        helpers.petrucciChannels.push(channel);
+        subscribeCallback = function(ch){
+            assert.equal(channel, ch);
+        };
+        helpers.listeners.push({
+            'event': 'subscribe',
+            'callback': subscribeCallback
+        });
+        Petrucci.on('subscribe', subscribeCallback);
+        Petrucci.subscribeToPlayset(token).then(function(petrucci){
+            done();
+        }, assert.fail);
+    });
+
+    it("should get subscribed tokens for a channel", function(done){
+        var token = 'grmnygrmny:user:dan:0',
+            channel = common.getChannel(token);
+
+        helpers.petrucciChannels.push(channel);
+        sequence(this).then(function(next){
+            Petrucci.subscribeToPlayset(token).then(next);
+        }).then(function(next, petrucci){
+            Petrucci.getTokens(channel).then(function(p){
+                assert.deepEqual([token], p.tokens);
+                done();
+            }, assert.fail);
         });
     });
 
-    describe("create", function(){
-        it("should create create a petrucci", function(done){
-            var title = "this is a title";
-            sequence(this).then(function(next){
-                helpers.createPetrucci({'title': title}).then(next);
-            }).then(function(next, s){
-                Petrucci.getById(s.id).then(function(petrucci){
-                    next(petrucci);
-                });
-            }).then(function(next, petrucci){
-                assert.equal(petrucci.title, title);
-                done();
-            });
+    it("should add new songs to shuffle via the shuffle api", function(done){
+        var tokens = [
+                'grmnygrmny:user:dan:0',
+                'grmnygrmny:user:jm:0',
+                'grmnygrmny:user:majman:0'
+            ], newSongs = [
+                18073540,
+                38474140,
+                33285435
+            ],
+            newSongsCallback;
+
+        newSongsCallback = function(nS){
+            assert.deepEqual(tokens, nS.tokens);
+            assert.deepEqual(newSongs, nS.new_songs);
+            done();
+        };
+        helpers.listeners.push({
+            'event': 'newSongs',
+            'callback': newSongsCallback
         });
+        Petrucci.on('newSongs', newSongsCallback);
+        Petrucci.addNewSongs(tokens, newSongs).then(assert.pass, assert.fail);
     });
 
-    describe("update", function(){
-        it("should update stuff", function(done){
-            var title = "this is a title",
-                id;
-            sequence(this).then(function(next){
-                helpers.createPetrucci({
-                    'title': title
-                }).then(next);
-            }).then(function(next, s){
-                id = s.id;
-                Petrucci.update('petrucci', s.id).set({
-                    'title': 'this is a new title'
-                })
-                .commit()
-                .then(next);
-            }).then(function(next){
-                Petrucci.getById(id).then(next);
-            }).then(function(next, petrucci){
-                assert.equal('this is a new title', petrucci.title);
-                done();
-            });
+    it("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
+        var token = 'totallyarealuser:user:someotheruser:0',
+            channel = common.getChannel(token),
+            newSongs = [
+                18073540,
+                38474140,
+                33285435
+            ],
+            newSongsBase36 = [],
+            redis_client = redis.createClient(redisInfo.port, redisInfo.host),
+            newSongsCallback;
+
+        newSongs.map(function(s){
+            newSongsBase36.push(common.base36encode(s));
         });
+
+        newSongsCallback = function(nS){
+            assert.deepEqual([token], nS.tokens);
+            assert.deepEqual(newSongs, nS.new_songs);
+            done();
+        };
+        Petrucci.on('newSongs', newSongsCallback);
+        helpers.listeners.push({
+            'event': 'newSongs',
+            'callback': newSongsCallback
+        });
+        helpers.petrucciChannels.push(channel);
+        Petrucci.subscribeToPlayset(token).then(function(){
+            redis_client.publish(channel, JSON.stringify(newSongsBase36));
+        }, assert.fail);
+    });
+
+});
+
+describe("Redis Bridge", function(){
+    var redisInfo = helpers.getRedisInfo();
+
+    before(function(done){
+        helpers.setup(done);
+        redisBridge.connect(redisInfo.host, redisInfo.port, 0);
+    });
+
+    after(function(done){
+        helpers.teardown(done);
+    });
+
+    it("should subscribe to a channel", function(done){
+        var redis_client = redis.createClient(redisInfo.port, redisInfo.host);
+        done();
     });
 });
