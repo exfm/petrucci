@@ -51,7 +51,7 @@
         "availabilityZones": [
             "us-east-1a"
         ],
-        "instanceType": "m1.small",
+        "instanceType": "t1.micro",
         "amiId": "ami-64f7480d"
     },
     "model": [
