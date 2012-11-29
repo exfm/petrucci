@@ -21,8 +21,7 @@
         "junto": "git+ssh://git@github.com/exfm/node-junto.git",
         "nurse": "git://github.com/exfm/node-nurse.git",
         "redis": "0.8.2",
-        "express-winston": "0.1.2",
-        "shuffle": "git+ssh://git@github.com/exfm/shuffle.git"
+        "express-winston": "0.1.2"
     },
     "devDependencies": {
         "mocha": "1.6.0",
@@ -55,7 +54,7 @@
             "us-east-1d",
             "us-east-1e"
         ],
-        "instanceType": "m1.large",
+        "instanceType": "m1.small",
         "amiId": "ami-64f7480d"
     },
     "model": [

@@ -15,20 +15,20 @@ var Petrucci = helpers.covRequire("../lib/model"),
 
 
 describe("Model", function(){
-    // magneto.server = null;
+    magneto.server = null;
 
     var redisInfo = helpers.getRedisInfo();
 
     before(function(done){
         helpers.setup(done);
-        redisBridge.connect(redisInfo.host, redisInfo.port, 0);
+        // redisBridge.connect(redisInfo.host, redisInfo.port, 0);
     });
 
     afterEach(function(done){
         helpers.teardown(done);
     });
 
-    it.skip("should subscribe to a playset by token", function(done){
+    it("should subscribe to a playset by token", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
@@ -38,7 +38,7 @@ describe("Model", function(){
         }, assert.fail);
     });
 
-    it.skip("should get subscribed tokens for a channel", function(done){
+    it("should get subscribed tokens for a channel", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
 
@@ -55,7 +55,7 @@ describe("Model", function(){
 
     });
 
-    it("should add new songs to shuffle via the shuffle api", function(done){
+    it.skip("should add new songs to shuffle via the shuffle api", function(done){
         var tokens = [
                 'grmnygrmny:user:dan:0',
                 'grmnygrmny:user:jm:0',
@@ -72,7 +72,7 @@ describe("Model", function(){
 
 });
 
-describe("Redis Bridge", function(){
+describe.skip("Redis Bridge", function(){
     var redisInfo = helpers.getRedisInfo();
 
     before(function(done){

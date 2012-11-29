@@ -6,8 +6,7 @@ var app = require('./'),
     nconf = require('nconf'),
     winston = require('winston'),
     getConfig = require('junto'),
-    common = require('./lib/common'),
-    redisBridge = require('./lib/redisbridge');
+    common = require('./lib/common');
 
 nconf
     .argv()
@@ -41,12 +40,6 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
             console.log('All tables created in magneto');
         });
     }
-
-    // Start the redis bridge, using redis server info from junto
-    redisBridge.connect(
-        common.isLocal() ? 'localhost' : nconf.get("redis_host"),
-        common.isLocal() ? 6379 : nconf.get("redis_port"),
-        0);
 });
 
 

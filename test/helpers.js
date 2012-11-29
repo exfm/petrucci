@@ -19,7 +19,6 @@ var when = require('when'),
     magneto = require('magneto');
 
 var Petrucci = exports.covRequire('../lib/model'),
-    Shuffle = require('shuffle'),
     app = exports.covRequire('../lib/app');
 
 nconf.defaults({
@@ -80,22 +79,6 @@ exports.teardown = function(cb){
 function randint(){
     return parseInt(Math.random() * 100000000000, 10);
 }
-
-exports.createPetrucci = function(opts){
-    opts = opts || {};
-    var d = when.defer();
-    if(!opts.hasOwnProperty('title')){
-        opts.title = "a title";
-    }
-    Petrucci.create(opts).then(function(petrucci){
-        exports.petrucciChannels.push(petrucci.channel);
-        d.resolve(petrucci);
-    }, function(err){
-        throw new Error(err);
-    });
-    return d.promise;
-};
-
 exports.teardownPetruccis = function(){
     var d = when.defer();
     if(exports.petrucciChannels.length === 0){
