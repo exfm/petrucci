@@ -33,12 +33,13 @@ describe("Model", function(){
             channel = common.getChannel(token),
             redis_client = redis.createClient(redisInfo.port, redisInfo.host);
 
+        helpers.petrucciChannels.push(channel);
+
         Petrucci.on('subscribe', function(ch){
             assert.equal(channel, ch);
         });
 
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
-            helpers.petrucciChannels.push(channel);
             done();
         }, assert.fail);
     });
@@ -46,10 +47,12 @@ describe("Model", function(){
     it("should get subscribed tokens for a channel", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
+
+        helpers.petrucciChannels.push(channel);
+
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
-            helpers.petrucciChannels.push(channel);
             console.log(petrucci);
             Petrucci.getTokens(channel).then(function(petrucci){
                 assert.deepEqual([token], petrucci.tokens);
