@@ -38,6 +38,7 @@ magneto.setLogLevel(50);
 var server = null;
 
 exports.petrucciChannels = [];
+exports.listeners = [];
 
 exports.setup = function(cb){
     sequence().then(function(next){
@@ -72,6 +73,7 @@ exports.setup = function(cb){
 
 exports.teardown = function(cb){
     exports.teardownPetruccis().then(function(){
+        exports.teardownListeners();
         cb();
     });
 };
@@ -95,6 +97,15 @@ exports.teardownPetruccis = function(){
         return p.promise;
     })).then(d.resolve, d.reject);
     return d.promise;
+};
+
+exports.teardownListeners = function(){
+    exports.listeners.map(function(listener){
+        Petrucci.removeListener(listener.event, listener.callback);
+        exports.listeners.splice(
+            exports.listeners.indexOf(listener),
+            1);
+    });
 };
 
 exports.getRedisInfo = function(){
