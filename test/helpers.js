@@ -33,7 +33,7 @@ process.env.MAMBO_BACKEND = nconf.get('MAMBO_BACKEND');
 process.env.MAGNETO_PORT = nconf.get('MAGNETO_PORT');
 
 magneto.server = null;
-// magneto.setLogLevel(50);
+magneto.setLogLevel(50);
 
 var server = null;
 

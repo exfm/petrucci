@@ -29,11 +29,16 @@ describe("Model", function(){
     });
 
     it("should subscribe to a playset by token", function(done){
-        var token = 'grmnygrmny:user:dan:0',
-            channel = 'dan:loved';
+        var token = 'nonexistantuser:user:totallyarealuser:0',
+            channel = common.getChannel(token),
+            redis_client = redis.createClient(redisInfo.port, redisInfo.host);
+
+        Petrucci.on('subscribe', function(ch){
+            assert.equal(channel, ch);
+        });
+
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
             helpers.petrucciChannels.push(channel);
-            console.log(petrucci);
             done();
         }, assert.fail);
     });
@@ -41,7 +46,6 @@ describe("Model", function(){
     it("should get subscribed tokens for a channel", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
-
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
@@ -52,10 +56,9 @@ describe("Model", function(){
                 done();
             }, assert.fail);
         });
-
     });
 
-    it.skip("should add new songs to shuffle via the shuffle api", function(done){
+    it("should add new songs to shuffle via the shuffle api", function(done){
         var tokens = [
                 'grmnygrmny:user:dan:0',
                 'grmnygrmny:user:jm:0',
@@ -65,9 +68,12 @@ describe("Model", function(){
                 38474140,
                 33285435
             ];
-        Petrucci.addNewSongs(tokens, newSongs).then(function(){
+        Petrucci.on('newSongs', function(nS){
+            assert.deepEqual(tokens, nS.tokens);
+            assert.deepEqual(newSongs, nS.new_songs);
             done();
-        }, assert.fail);
+        });
+        Petrucci.addNewSongs(tokens, newSongs).then(assert.pass, assert.fail);
     });
 
 });
