@@ -45,14 +45,11 @@
         "bid": null,
         "evalPeriod": 300,
         "numEvalPeriods": 2,
-        "minInstances": 4,
-        "maxInstances": 50,
-        "incrementBy": 4,
+        "minInstances": 1,
+        "maxInstances": 1,
+        "incrementBy": 1,
         "availabilityZones": [
-            "us-east-1a",
-            "us-east-1b",
-            "us-east-1d",
-            "us-east-1e"
+            "us-east-1a"
         ],
         "instanceType": "m1.small",
         "amiId": "ami-64f7480d"
