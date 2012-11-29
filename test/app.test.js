@@ -1,11 +1,15 @@
 "use strict";
 
-var helpers = require("./helpers"),
+var Petrucci = require('../lib/model'),
+    helpers = require("./helpers"),
     sequence = require("sequence"),
     when = require("when"),
     assert = require("assert"),
     request = require("superagent"),
+    magneto = require("magneto"),
     util = require('util'),
+    redis = require('redis'),
+    common = require('../lib/common'),
     child_process = require('child_process'),
     path = require('path');
 
@@ -31,41 +35,58 @@ function get(path){
 }
 
 describe("API", function(){
-    // before(function(done){
-    //     helpers.setup(done);
-    // });
+    magneto.server = null;
 
-    // after(function(done){
-    //     helpers.teardown(done);
-    // });
+    var redisInfo = helpers.getRedisInfo();
 
-    // describe("create", function(){
-    //     it("should to a playset", function(done){
-    //         post('/')
-    //             .send({'title': "a title"})
-    //             .end(function(res){
-    //                 assert.equal(200, res.status);
-    //                 assert.equal("a title", res.body.title);
-    //                 done();
-    //         });
-    //     });
-    // });
+    before(function(done){
+        helpers.setup(done);
+    });
 
-    // describe("get", function(){
-    //     var petrucci;
-    //     before(function(done){
-    //         helpers.createPetrucci().then(function(data){
-    //             petrucci = data;
-    //             done();
-    //         });
-    //     });
-    //     it("should get new songs by token", function(done){
-    //         get("/" + petrucci.id)
-    //             .end(function(res){
-    //                 assert.equal(200, res.status);
-    //                 assert.equal(petrucci.title, res.body.title);
-    //                 done();
-    //             });
-    //     });
-    // });
+    afterEach(function(done){
+        helpers.teardown(done);
+    });
+
+    it("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
+        var token = 'totallyarealuser:user:someotheruser:0',
+            channel = common.getChannel(token),
+            newSongs = [
+                18073540,
+                38474140,
+                33285435
+            ],
+            newSongsBase36 = [],
+            redis_client = redis.createClient(redisInfo.port, redisInfo.host),
+            newSongsCallback;
+
+        newSongs.map(function(s){
+            newSongsBase36.push(common.base36encode(s));
+        });
+
+        newSongsCallback = function(nS){
+            assert.deepEqual([token], nS.tokens);
+            assert.deepEqual(newSongs, nS.new_songs);
+            done();
+        };
+        Petrucci.on('newSongs', newSongsCallback);
+        helpers.listeners.push({
+            'event': 'newSongs',
+            'callback': newSongsCallback
+        });
+        helpers.petrucciChannels.push(channel);
+
+        request
+            .post(baseUrl + '/')
+            .type('json')
+            .send({
+                'token': token
+            })
+            .end(function(res){
+                if (res.statusCode !== 200){
+                    return assert.fail();
+                }
+                return redis_client.publish(channel, JSON.stringify(newSongsBase36));
+            });
+    });
+
 });

@@ -72,6 +72,7 @@ describe("Model", function(){
                 33285435
             ],
             newSongsCallback;
+
         newSongsCallback = function(nS){
             assert.deepEqual(tokens, nS.tokens);
             assert.deepEqual(newSongs, nS.new_songs);
@@ -111,7 +112,7 @@ describe("Model", function(){
             'event': 'newSongs',
             'callback': newSongsCallback
         });
-
+        helpers.petrucciChannels.push(channel);
         Petrucci.subscribeToPlayset(token).then(function(){
             redis_client.publish(channel, JSON.stringify(newSongsBase36));
         }, assert.fail);
