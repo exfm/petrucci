@@ -21,7 +21,6 @@ describe("Model", function(){
 
     before(function(done){
         helpers.setup(done);
-        // redisBridge.connect(redisInfo.host, redisInfo.port, 0);
     });
 
     afterEach(function(done){

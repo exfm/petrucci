@@ -46,16 +46,16 @@ exports.setup = function(cb){
             if(nconf.get('MAMBO_BACKEND') === 'magneto'){
                 if(!magneto.server){
                     magneto.server = magneto.listen(nconf.get('MAGNETO_PORT'), next);
+                    return;
                 }
             }
-            next();
+            return next();
         });
     }).then(function(next){
         Petrucci.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
             nconf.get('TABLE_PREFIX'));
-        Petrucci.createAll().then(function(){
-            next();
-        });
+        Petrucci.createAll().then(next);
+
     }).then(function(next){
         if(!server){
             server = app.listen(nconf.get('PORT'), nconf.get('HOST'), function(){
