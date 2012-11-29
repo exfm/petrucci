@@ -14,6 +14,8 @@ var when = require('when'),
     assert = require("assert"),
     nconf = require("nconf"),
     getConfig = require("junto"),
+    common = require('../lib/common'),
+    redisBridge = require('../lib/redisbridge'),
     magneto = require('magneto');
 
 var Petrucci = exports.covRequire('../lib/model'),
@@ -35,6 +37,9 @@ magneto.setLogLevel(50);
 
 var server = null;
 
+exports.petrucciChannels = [];
+exports.listeners = [];
+
 exports.setup = function(cb){
     sequence().then(function(next){
         getConfig(nconf.get("NODE_ENV")).then(function(config){
@@ -42,16 +47,16 @@ exports.setup = function(cb){
             if(nconf.get('MAMBO_BACKEND') === 'magneto'){
                 if(!magneto.server){
                     magneto.server = magneto.listen(nconf.get('MAGNETO_PORT'), next);
+                    return;
                 }
             }
-            next();
+            return next();
         });
     }).then(function(next){
         Petrucci.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
             nconf.get('TABLE_PREFIX'));
-        Petrucci.createAll().then(function(){
-            next();
-        });
+        Petrucci.createAll().then(next);
+
     }).then(function(next){
         if(!server){
             server = app.listen(nconf.get('PORT'), nconf.get('HOST'), function(){
@@ -68,6 +73,7 @@ exports.setup = function(cb){
 
 exports.teardown = function(cb){
     exports.teardownPetruccis().then(function(){
+        exports.teardownListeners();
         cb();
     });
 };
@@ -75,33 +81,36 @@ exports.teardown = function(cb){
 function randint(){
     return parseInt(Math.random() * 100000000000, 10);
 }
-
-exports.petrucciIds = [];
-
-exports.createPetrucci = function(opts){
-    opts = opts || {};
+exports.teardownPetruccis = function(){
     var d = when.defer();
-    if(!opts.hasOwnProperty('title')){
-        opts.title = "a title";
+    if(exports.petrucciChannels.length === 0){
+        return d.resolve();
     }
-    Petrucci.create(opts).then(function(petrucci){
-        exports.petrucciIds.push(petrucci.id);
-        d.resolve(petrucci);
-    }, function(err){
-        throw new Error(err);
-    });
+    when.all(exports.petrucciChannels.map(function(channel){
+        var p = when.defer();
+        Petrucci.destroy(channel).then(function(){
+            exports.petrucciChannels.splice(
+                exports.petrucciChannels.indexOf(channel),
+                1);
+            p.resolve();
+        }, p.reject);
+        return p.promise;
+    })).then(d.resolve, d.reject);
     return d.promise;
 };
 
-exports.teardownPetruccis = function(){
-    var d = when.defer();
-    if(exports.petrucciIds.length === 0){
-        return d.resolve();
-    }
-    when.all(exports.petrucciIds.map(function(id){
-        return Petrucci.destroy(id);
-    }), function(){
-        d.resolve();
+exports.teardownListeners = function(){
+    exports.listeners.map(function(listener){
+        Petrucci.removeListener(listener.event, listener.callback);
+        exports.listeners.splice(
+            exports.listeners.indexOf(listener),
+            1);
     });
-    return d.promise;
+};
+
+exports.getRedisInfo = function(){
+    return ({
+        'port': common.isLocal() ? 6379 : nconf.get("redis_port"),
+        'host': common.isLocal() ? 'localhost' : nconf.get("redis_host")
+    });
 };

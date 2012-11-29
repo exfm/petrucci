@@ -5,8 +5,8 @@ var app = require('./'),
     http = require('http'),
     nconf = require('nconf'),
     winston = require('winston'),
-    getConfig = require('junto');
-
+    getConfig = require('junto'),
+    common = require('./lib/common');
 
 nconf
     .argv()
@@ -41,6 +41,8 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
         });
     }
 });
+
+
 
 var server = http.createServer(app);
 app.server = server;
