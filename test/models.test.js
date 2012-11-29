@@ -24,6 +24,8 @@ describe("Model", function(){
     });
 
     afterEach(function(done){
+        Petrucci.removeAllListeners('subscribe');
+        Petrucci.removeAllListeners('newSongs');
         helpers.teardown(done);
     });
 
@@ -33,11 +35,9 @@ describe("Model", function(){
             redis_client = redis.createClient(redisInfo.port, redisInfo.host);
 
         helpers.petrucciChannels.push(channel);
-
         Petrucci.on('subscribe', function(ch){
             assert.equal(channel, ch);
         });
-
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
             done();
         }, assert.fail);
@@ -48,13 +48,11 @@ describe("Model", function(){
             channel = 'dan:loved';
 
         helpers.petrucciChannels.push(channel);
-
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
-            console.log(petrucci);
-            Petrucci.getTokens(channel).then(function(petrucci){
-                assert.deepEqual([token], petrucci.tokens);
+            Petrucci.getTokens(channel).then(function(p){
+                assert.deepEqual([token], p.tokens);
                 done();
             }, assert.fail);
         });
@@ -80,7 +78,7 @@ describe("Model", function(){
 
 });
 
-describe.skip("Redis Bridge", function(){
+describe("Redis Bridge", function(){
     var redisInfo = helpers.getRedisInfo();
 
     before(function(done){

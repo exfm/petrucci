@@ -85,10 +85,15 @@ exports.teardownPetruccis = function(){
         return d.resolve();
     }
     when.all(exports.petrucciChannels.map(function(channel){
-        return Petrucci.destroy(channel);
-    }), function(){
-        d.resolve();
-    });
+        var p = when.defer();
+        Petrucci.destroy(channel).then(function(){
+            exports.petrucciChannels.splice(
+                exports.petrucciChannels.indexOf(channel),
+                1);
+            p.resolve();
+        }, p.reject);
+        return p.promise;
+    })).then(d.resolve, d.reject);
     return d.promise;
 };
 
