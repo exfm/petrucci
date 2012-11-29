@@ -3,10 +3,10 @@
     "name": "petrucci",
     "description": "Redis event watcher for the exfm shuffle service",
     "version": "0.0.0",
-    "homepage": "http://github.com/exfm/node-petrucci",
+    "homepage": "http://github.com/exfm/petrucci",
     "repository": {
         "type": "git",
-        "url": "git://github.com/exfm/node-petrucci.git"
+        "url": "git://github.com/exfm/petrucci.git"
     },
     "dependencies": {
         "sequence": "2.2.1",
