@@ -10,6 +10,7 @@ var assert = require("assert"),
     redis = require("redis");
 
 var Petrucci = helpers.covRequire("../lib/model"),
+    common = require("../lib/common"),
     redisBridge = require('../lib/redisbridge');
 
 
@@ -27,7 +28,7 @@ describe("Model", function(){
         helpers.teardown(done);
     });
 
-    it("should subscribe to a playset by token", function(done){
+    it.skip("should subscribe to a playset by token", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
@@ -37,7 +38,7 @@ describe("Model", function(){
         }, assert.fail);
     });
 
-    it("should get subscribed tokens for a channel", function(done){
+    it.skip("should get subscribed tokens for a channel", function(done){
         var token = 'grmnygrmny:user:dan:0',
             channel = 'dan:loved';
 
@@ -52,6 +53,21 @@ describe("Model", function(){
             }, assert.fail);
         });
 
+    });
+
+    it("should add new songs to shuffle via the shuffle api", function(done){
+        var tokens = [
+                'grmnygrmny:user:dan:0',
+                'grmnygrmny:user:jm:0',
+                'grmnygrmny:user:majman:0'
+            ], newSongs = [
+                18073540,
+                38474140,
+                33285435
+            ];
+        Petrucci.addNewSongs(tokens, newSongs).then(function(){
+            done();
+        }, assert.fail);
     });
 
 });
