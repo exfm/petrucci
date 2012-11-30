@@ -1,6 +1,6 @@
-# node-petrucci
+# petrucci
 
-Redis event watcher
+Redis event watcher for the exfm shuffle service
 
 ## Install
 
