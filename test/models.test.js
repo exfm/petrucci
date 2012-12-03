@@ -141,7 +141,9 @@ describe("Model", function(){
         helpers.petrucciChannels.push(channel);
         Petrucci.subscribeToPlayset(token).then(function(){
             redis_client.publish(channel, JSON.stringify(newSongsBase36));
-        }, assert.fail);
+        }, function(){
+            throw new Error();
+        });
     });
 
 });
