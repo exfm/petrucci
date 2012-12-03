@@ -40,6 +40,7 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
             console.log('All tables created in magneto');
         });
     }
+    app.connectRedis();
 });
 
 
