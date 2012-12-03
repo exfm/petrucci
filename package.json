@@ -58,7 +58,7 @@
         {
             "alias": "petrucci",
             "table": "Petrucci",
-            "hashName": "token",
+            "hashName": "channel",
             "hashType": "S",
             "read": 1,
             "write": 1
