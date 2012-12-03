@@ -86,7 +86,7 @@ describe("Model", function(){
         Petrucci.addNewSongs(tokens, newSongs).then(assert.pass, assert.fail);
     });
 
-    it("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
+    it.skip("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
         var token = 'totallyarealuser:user:someotheruser:0',
             channel = common.getChannel(token),
             newSongs = [
