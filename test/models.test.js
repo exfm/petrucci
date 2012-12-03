@@ -35,6 +35,7 @@ describe("Model", function(){
         helpers.petrucciChannels.push(channel);
         subscribeCallback = function(ch){
             assert.equal(channel, ch);
+            done();
         };
         helpers.listeners.push({
             'event': 'subscribe',
@@ -42,8 +43,10 @@ describe("Model", function(){
         });
         Petrucci.on('subscribe', subscribeCallback);
         Petrucci.subscribeToPlayset(token).then(function(petrucci){
-            done();
-        }, assert.fail);
+
+        }, function(){
+            throw new Error('Unable to subscribe to playset');
+        });
     });
 
     it("should get subscribed tokens for a channel", function(done){
@@ -57,7 +60,30 @@ describe("Model", function(){
             Petrucci.getTokens(channel).then(function(p){
                 assert.deepEqual([token], p.tokens);
                 done();
-            }, assert.fail);
+            }, function(){
+                throw new Error('Unable to subscribe to channel');
+            });
+        });
+    });
+
+    it("should unsubscribe a token from a channel", function(done){
+        var token = 'grmnygrmny:user:dan:0',
+            channel = common.getChannel(token);
+
+        helpers.petrucciChannels.push(channel);
+        sequence(this).then(function(next){
+            Petrucci.subscribeToPlayset(token).then(next);
+        }).then(function(next, petrucci){
+            Petrucci.unsubscribeFromPlayset(token).then(next, function(){
+                throw new Error('Unable to unsubscribe from channel');
+            });
+        }).then(function(next){
+            Petrucci.getTokens(channel).then(function(p){
+                helpers.petrucciChannels.splice(helpers.petrucciChannels.indexOf(channel), 1);
+                done();
+            }, function(){
+                throw new Error();
+            });
         });
     });
 
@@ -83,7 +109,7 @@ describe("Model", function(){
             'callback': newSongsCallback
         });
         Petrucci.on('newSongs', newSongsCallback);
-        Petrucci.addNewSongs(tokens, newSongs).then(assert.pass, assert.fail);
+        Petrucci.addNewSongs(tokens, newSongs);
     });
 
     it.skip("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
@@ -115,7 +141,9 @@ describe("Model", function(){
         helpers.petrucciChannels.push(channel);
         Petrucci.subscribeToPlayset(token).then(function(){
             redis_client.publish(channel, JSON.stringify(newSongsBase36));
-        }, assert.fail);
+        }, function(){
+            throw new Error();
+        });
     });
 
 });

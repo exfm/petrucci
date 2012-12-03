@@ -83,10 +83,38 @@ describe("API", function(){
             })
             .end(function(res){
                 if (res.statusCode !== 200){
-                    return assert.fail();
+                    throw new Error(res.body);
                 }
                 return redis_client.publish(channel, JSON.stringify(newSongsBase36));
             });
+    });
+
+    it("should subscribe and unsubscribe from a playset", function(done){
+        var token = 'grmnygrmny:user:dan:0',
+            channel = common.getChannel(token);
+
+        helpers.petrucciChannels.push(channel);
+        sequence(this).then(function(next){
+            Petrucci.subscribeToPlayset(token).then(next);
+        }).then(function(next, petrucci){
+            request
+            .post(baseUrl + '/unsubscribe')
+            .type('json')
+            .send({
+                'token': token
+            })
+            .end(function(res){
+                if (res.statusCode !== 200){
+                    throw new Error(res.body);
+                }
+                Petrucci.getTokens(channel).then(function(p){
+                    helpers.petrucciChannels.splice(helpers.petrucciChannels.indexOf(channel), 1);
+                    done();
+                }, function(){
+                    throw new Error();
+                });
+            });
+        });
     });
 
 });
