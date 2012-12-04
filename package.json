@@ -14,7 +14,7 @@
         "nconf": "0.6.5",
         "underscore": "1.4.2",
         "winston": "0.6.2",
-        "mambo": "0.0.8",
+        "mambo": "git://github.com/exfm/node-mambo.git",
         "up": "0.2.2",
         "counterman-client": "0.0.2",
         "when": "git://github.com/exfm/when.git",
