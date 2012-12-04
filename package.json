@@ -21,7 +21,8 @@
         "junto": "git+ssh://git@github.com/exfm/node-junto.git",
         "nurse": "git://github.com/exfm/node-nurse.git",
         "redis": "0.8.2",
-        "express-winston": "0.1.2"
+        "express-winston": "0.1.2",
+        "commander": "1.1.1"
     },
     "devDependencies": {
         "mocha": "1.6.0",
