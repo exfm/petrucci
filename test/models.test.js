@@ -112,39 +112,40 @@ describe("Model", function(){
         Petrucci.addNewSongs(tokens, newSongs);
     });
 
-    it.skip("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
-        var token = 'totallyarealuser:user:someotheruser:0',
-            channel = common.getChannel(token),
-            newSongs = [
-                18073540,
-                38474140,
-                33285435
-            ],
-            newSongsBase36 = [],
-            redis_client = redis.createClient(redisInfo.port, redisInfo.host),
-            newSongsCallback;
+    // this is already done in API
+    // it("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
+    //     var token = 'totallyarealuser:user:someotheruser:0',
+    //         channel = common.getChannel(token),
+    //         newSongs = [
+    //             18073540,
+    //             38474140,
+    //             33285435
+    //         ],
+    //         newSongsBase36 = [],
+    //         redis_client = redis.createClient(redisInfo.port, redisInfo.host),
+    //         newSongsCallback;
 
-        newSongs.map(function(s){
-            newSongsBase36.push(common.base36encode(s));
-        });
+    //     newSongs.map(function(s){
+    //         newSongsBase36.push(common.base36encode(s));
+    //     });
 
-        newSongsCallback = function(nS){
-            assert.deepEqual([token], nS.tokens);
-            assert.deepEqual(newSongs, nS.new_songs);
-            done();
-        };
-        Petrucci.on('newSongs', newSongsCallback);
-        helpers.listeners.push({
-            'event': 'newSongs',
-            'callback': newSongsCallback
-        });
-        helpers.petrucciChannels.push(channel);
-        Petrucci.subscribeToPlayset(token).then(function(){
-            redis_client.publish(channel, JSON.stringify(newSongsBase36));
-        }, function(){
-            throw new Error();
-        });
-    });
+    //     newSongsCallback = function(nS){
+    //         assert.deepEqual([token], nS.tokens);
+    //         assert.deepEqual(newSongs, nS.new_songs);
+    //         done();
+    //     };
+    //     Petrucci.on('newSongs', newSongsCallback);
+    //     helpers.listeners.push({
+    //         'event': 'newSongs',
+    //         'callback': newSongsCallback
+    //     });
+    //     helpers.petrucciChannels.push(channel);
+    //     Petrucci.subscribeToPlayset(token).then(function(){
+    //         redis_client.publish(channel, JSON.stringify(newSongsBase36));
+    //     }, function(){
+    //         throw new Error();
+    //     });
+    // });
 
 });
 
