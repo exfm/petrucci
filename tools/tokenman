@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+"use strict";
+
+var request = require('superagent'),
+    sequence = require('sequence'),
+    commander = require('commander'),
+    nconf = require('nconf'),
+    when = require('when');
+
+nconf.file({'file': 'config.json'});
+
+function subscribe(token){
+    var d = when.defer();
+    request
+        .post(nconf.get('petrucci_url'))
+        .type('json')
+        .send({
+            'token': token
+        }).end(function(err, res){
+            if (err){
+                d.reject();
+            }
+            d.resolve(res);
+        });
+    return d.promise;
+}
+
+function unsubscribe(token){
+    var d = when.defer();
+    request
+        .post(nconf.get('petrucci_url')+'unsubscribe')
+        .type('json')
+        .send({
+            'token': token
+        }).end(function(err, res){
+            if (err){
+                d.reject();
+            }
+            d.resolve(res);
+        });
+    return d.promise;
+}
+
+commander
+    .usage('[options] <token>')
+    .parse(process.argv);
+
+switch(commander.args[0]){
+    case 'subscribe':
+        subscribe(commander.args[1]).then(function(res){
+            console.log(res.statusCode);
+        });
+        break;
+    case 'unsubscribe':
+        unsubscribe(commander.args[1]).then(function(res){
+            console.log(res.statusCode);
+        });
+        break;
+}
