@@ -184,4 +184,10 @@ describe("GenreWatcher", function(){
         });
     });
 
+    it("should get list of genres", function(done){
+        genreWatcher.getGenres().then(function(genres){
+            assert.notEqual(genres.indexOf('heatwave'), -1);
+            done();
+        });
+    });
 });
