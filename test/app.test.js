@@ -49,7 +49,7 @@ describe("API", function(){
 
     it("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
         var token = 'totallyarealuser:user:someotheruser:0',
-            channel = common.getChannel(token),
+            id = common.getIdFromToken(token),
             newSongs = [
                 18073540,
                 38474140,
@@ -73,7 +73,7 @@ describe("API", function(){
             'event': 'newSongs',
             'callback': newSongsCallback
         });
-        helpers.petrucciChannels.push(channel);
+        helpers.petrucciIds.push(id);
 
         request
             .post(baseUrl + '/')
@@ -85,15 +85,15 @@ describe("API", function(){
                 if (res.statusCode !== 200){
                     throw new Error(res.body);
                 }
-                return redis_client.publish(channel, JSON.stringify(newSongsBase36));
+                return redis_client.publish(common.getRedisChannelFromId(id), JSON.stringify(newSongsBase36));
             });
     });
 
     it("should subscribe and unsubscribe from a playset", function(done){
         var token = 'grmnygrmny:user:dan:0',
-            channel = common.getChannel(token);
+            id = common.getIdFromToken(token);
 
-        helpers.petrucciChannels.push(channel);
+        helpers.petrucciIds.push(id);
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
@@ -107,8 +107,8 @@ describe("API", function(){
                 if (res.statusCode !== 200){
                     throw new Error(res.body);
                 }
-                Petrucci.getTokens(channel).then(function(p){
-                    helpers.petrucciChannels.splice(helpers.petrucciChannels.indexOf(channel), 1);
+                Petrucci.getTokens(id).then(function(p){
+                    helpers.petrucciIds.splice(helpers.petrucciIds.indexOf(id), 1);
                     done();
                 }, function(){
                     throw new Error();
