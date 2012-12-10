@@ -177,9 +177,11 @@ describe("GenreWatcher", function(){
         helpers.teardown(done);
     });
 
-    it ("should fetch genres from S3", function(done){
-        genreWatcher.getGenres().then(function(res){
+    it("should be watching a genre", function(done){
+        genreWatcher.subscribe('heatwave').then(function(genres){
+            assert.notEqual(genres.indexOf('heatwave'), -1);
             done();
         });
     });
+
 });
