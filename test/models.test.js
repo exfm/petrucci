@@ -29,12 +29,12 @@ describe("Model", function(){
 
     it("should subscribe to a playset by token", function(done){
         var token = 'nonexistantuser:user:totallyarealuser:0',
-            channel = common.getChannel(token),
+            id = common.getIdFromToken(token),
             redis_client = redis.createClient(redisInfo.port, redisInfo.host),
             subscribeCallback;
-        helpers.petrucciChannels.push(channel);
-        subscribeCallback = function(ch){
-            assert.equal(channel, ch);
+        helpers.petrucciIds.push(id);
+        subscribeCallback = function(identifier){
+            assert.equal(id, identifier);
             done();
         };
         helpers.listeners.push({
@@ -49,15 +49,15 @@ describe("Model", function(){
         });
     });
 
-    it("should get subscribed tokens for a channel", function(done){
+    it("should get subscribed tokens for an id", function(done){
         var token = 'grmnygrmny:user:dan:0',
-            channel = common.getChannel(token);
+            id = common.getIdFromToken(token);
 
-        helpers.petrucciChannels.push(channel);
+        helpers.petrucciIds.push(id);
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
-            Petrucci.getTokens(channel).then(function(p){
+            Petrucci.getTokens(id).then(function(p){
                 assert.deepEqual([token], p.tokens);
                 done();
             }, function(){
@@ -66,11 +66,11 @@ describe("Model", function(){
         });
     });
 
-    it("should unsubscribe a token from a channel", function(done){
+    it("should unsubscribe a token from an id", function(done){
         var token = 'grmnygrmny:user:dan:0',
-            channel = common.getChannel(token);
+            id = common.getIdFromToken(token);
 
-        helpers.petrucciChannels.push(channel);
+        helpers.petrucciIds.push(id);
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
@@ -78,8 +78,8 @@ describe("Model", function(){
                 throw new Error('Unable to unsubscribe from channel');
             });
         }).then(function(next){
-            Petrucci.getTokens(channel).then(function(p){
-                helpers.petrucciChannels.splice(helpers.petrucciChannels.indexOf(channel), 1);
+            Petrucci.getTokens(id).then(function(p){
+                helpers.petrucciIds.splice(helpers.petrucciIds.indexOf(id), 1);
                 done();
             }, function(){
                 throw new Error();

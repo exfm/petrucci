@@ -59,7 +59,7 @@
         {
             "alias": "petrucci",
             "table": "Petrucci",
-            "hashName": "channel",
+            "hashName": "id",
             "hashType": "S",
             "read": 1,
             "write": 1

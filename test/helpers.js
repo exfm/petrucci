@@ -37,7 +37,7 @@ magneto.setLogLevel(50);
 
 var server = null;
 
-exports.petrucciChannels = [];
+exports.petrucciIds = [];
 exports.listeners = [];
 
 exports.setup = function(cb){
@@ -56,7 +56,6 @@ exports.setup = function(cb){
         Petrucci.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
             nconf.get('TABLE_PREFIX'));
         Petrucci.createAll().then(next);
-
     }).then(function(next){
         if(!server){
             server = app.listen(nconf.get('PORT'), nconf.get('HOST'), function(){
@@ -84,14 +83,14 @@ function randint(){
 }
 exports.teardownPetruccis = function(){
     var d = when.defer();
-    if(exports.petrucciChannels.length === 0){
+    if(exports.petrucciIds.length === 0){
         return d.resolve();
     }
-    when.all(exports.petrucciChannels.map(function(channel){
+    when.all(exports.petrucciIds.map(function(id){
         var p = when.defer();
-        Petrucci.destroy(channel).then(function(){
-            exports.petrucciChannels.splice(
-                exports.petrucciChannels.indexOf(channel),
+        Petrucci.destroy(id).then(function(){
+            exports.petrucciIds.splice(
+                exports.petrucciIds.indexOf(id),
                 1);
             p.resolve();
         }, p.reject);
