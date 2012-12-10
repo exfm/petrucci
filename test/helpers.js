@@ -14,6 +14,7 @@ var when = require('when'),
     assert = require("assert"),
     nconf = require("nconf"),
     getConfig = require("junto"),
+    aws = require('plata'),
     common = require('../lib/common'),
     redisBridge = require('../lib/redisbridge'),
     magneto = require('magneto');
@@ -56,6 +57,12 @@ exports.setup = function(cb){
         Petrucci.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
             nconf.get('TABLE_PREFIX'));
         Petrucci.createAll().then(next);
+    }).then(function(next){
+        Petrucci.aws.connect({
+            'key': nconf.get("aws:key"),
+            'secret': nconf.get("aws:secret")
+        });
+        Petrucci.aws.onConnected(next);
     }).then(function(next){
         if(!server){
             server = app.listen(nconf.get('PORT'), nconf.get('HOST'), function(){

@@ -11,7 +11,8 @@ var assert = require("assert"),
 
 var Petrucci = helpers.covRequire("../lib/model"),
     common = require("../lib/common"),
-    redisBridge = require('../lib/redisbridge');
+    redisBridge = require('../lib/redisbridge'),
+    genreWatcher = require('../lib/genrewatcher');
 
 
 describe("Model", function(){
@@ -164,5 +165,21 @@ describe("Redis Bridge", function(){
     it("should subscribe to a channel", function(done){
         var redis_client = redis.createClient(redisInfo.port, redisInfo.host);
         done();
+    });
+});
+
+describe("GenreWatcher", function(){
+    before(function(done){
+        helpers.setup(done);
+    });
+
+    afterEach(function(done){
+        helpers.teardown(done);
+    });
+
+    it ("should fetch genres from S3", function(done){
+        genreWatcher.getGenres().then(function(res){
+            done();
+        });
     });
 });
