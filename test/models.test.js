@@ -191,7 +191,10 @@ describe("GenreWatcher", function(){
         });
     });
 
-    it('cloudsearch', function(done){
-        genreWatcher.getRecentLoves('chillwave', 0);
+    it("should get recent loves for a genre using cloudsearch", function(done){
+
+        var timestamp = new Date().getTime();
+        console.log(timestamp);
+        genreWatcher.getRecentLoves('chillwave', timestamp);
     });
 });
