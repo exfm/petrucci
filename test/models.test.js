@@ -178,7 +178,7 @@ describe("GenreWatcher", function(){
     });
 
     it("should be watching a genre", function(done){
-        genreWatcher.subscribe('heatwave').then(function(genres){
+        genreWatcher.watchGenre('heatwave').then(function(genres){
             assert.notEqual(genres.indexOf('heatwave'), -1);
             done();
         });
@@ -189,5 +189,9 @@ describe("GenreWatcher", function(){
             assert.notEqual(genres.indexOf('heatwave'), -1);
             done();
         });
+    });
+
+    it('cloudsearch', function(done){
+        genreWatcher.getRecentLoves('chillwave', 0);
     });
 });
