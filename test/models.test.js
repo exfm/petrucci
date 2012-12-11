@@ -11,7 +11,8 @@ var assert = require("assert"),
 
 var Petrucci = helpers.covRequire("../lib/model"),
     common = require("../lib/common"),
-    redisBridge = require('../lib/redisbridge');
+    redisBridge = require('../lib/redisbridge'),
+    genreWatcher = require('../lib/genrewatcher');
 
 
 describe("Model", function(){
@@ -164,5 +165,41 @@ describe("Redis Bridge", function(){
     it("should subscribe to a channel", function(done){
         var redis_client = redis.createClient(redisInfo.port, redisInfo.host);
         done();
+    });
+});
+
+describe("GenreWatcher", function(){
+    before(function(done){
+        helpers.setup(done);
+    });
+
+    afterEach(function(done){
+        helpers.teardown(done);
+    });
+
+    it("should be watching a genre", function(done){
+        genreWatcher.watchGenre('heatwave').then(function(genres){
+            assert.notEqual(genres.indexOf('heatwave'), -1);
+            done();
+        });
+    });
+
+    it("should get list of genres", function(done){
+        genreWatcher.getGenres().then(function(genres){
+            assert.notEqual(genres.indexOf('heatwave'), -1);
+            done();
+        });
+    });
+
+    it("should get last new songs and then get new songs with cloudsearch", function(done){
+        sequence().then(function(next){
+            genreWatcher.getLastNewSongs().then(next, common.error);
+        }).then(function(next, lastNewSongs){
+            var timestamp = Math.round(lastNewSongs.getTime()/1000);
+            genreWatcher.getRecentLoves('chillwave', timestamp, 10).then(function(recentLoves){
+                assert.equal(true, recentLoves.length > 1);
+                done();
+            }, common.error);
+        });
     });
 });
