@@ -202,4 +202,8 @@ describe("GenreWatcher", function(){
             }, common.error);
         });
     });
+
+    it("test", function(done){
+        genreWatcher.genreWatcher();
+    })
 });

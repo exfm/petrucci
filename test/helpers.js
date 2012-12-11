@@ -14,6 +14,7 @@ var when = require('when'),
     assert = require("assert"),
     nconf = require("nconf"),
     getConfig = require("junto"),
+    plog = require('plog'),
     aws = require('plata'),
     common = require('../lib/common'),
     redisBridge = require('../lib/redisbridge'),
@@ -40,6 +41,11 @@ var server = null;
 
 exports.petrucciIds = [];
 exports.listeners = [];
+
+plog
+    .find(/^petrucci/)
+    .file('./logs/petrucci.log')
+    .level('silly');
 
 exports.setup = function(cb){
     sequence().then(function(next){

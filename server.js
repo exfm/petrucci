@@ -7,6 +7,7 @@ var app = require('./'),
     winston = require('winston'),
     getConfig = require('junto'),
     aws = require('plata'),
+    plog = require('plog'),
     common = require('./lib/common');
 
 nconf
@@ -41,6 +42,11 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
         'key': nconf.get("aws:key"),
         'secret': nconf.get("aws:secret")
     });
+
+    plog
+        .all()
+        .level('silly')
+        .file('./logs/petrucci.log');
 
     if(nconf.get('MAMBO_BACKEND')){
         Petrucci.createAll().then(function(){
