@@ -192,9 +192,10 @@ describe("GenreWatcher", function(){
     });
 
     it("should get recent loves for a genre using cloudsearch", function(done){
-
-        var timestamp = new Date().getTime();
-        console.log(timestamp);
-        genreWatcher.getRecentLoves('chillwave', timestamp);
+        var timestamp = Math.round((new Date().getTime())/1000) - (60*120);
+        genreWatcher.getRecentLoves('chillwave', timestamp).then(function(recentLoves){
+            assert.equal(true, recentLoves.length > 1);
+            done();
+        }, common.error);
     });
 });
