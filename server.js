@@ -6,6 +6,8 @@ var app = require('./'),
     nconf = require('nconf'),
     winston = require('winston'),
     getConfig = require('junto'),
+    aws = require('plata'),
+    plog = require('plog'),
     common = require('./lib/common');
 
 nconf
@@ -35,6 +37,17 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
     app.model.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
         nconf.get("table_prefix"));
 
+    // Connect plata
+    app.model.aws.connect({
+        'key': nconf.get("aws:key"),
+        'secret': nconf.get("aws:secret")
+    });
+
+    plog
+        .all()
+        .level('silly')
+        .file('./logs/petrucci.log');
+
     if(nconf.get('MAMBO_BACKEND')){
         Petrucci.createAll().then(function(){
             console.log('All tables created in magneto');
@@ -42,7 +55,6 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
     }
     app.connectRedis();
 });
-
 
 
 var server = http.createServer(app);
