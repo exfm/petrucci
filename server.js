@@ -45,7 +45,7 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
 
     plog
         .find(/^petrucci/)
-        .file('./logs/petrucci.log')
+        .file(__dirname + '/logs/petrucci.log')
         .remove('console')
         .level('silly');
 
