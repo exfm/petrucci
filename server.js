@@ -44,9 +44,10 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
     });
 
     plog
-        .all()
-        .level('silly')
-        .file('./logs/petrucci.log');
+        .find(/^petrucci/)
+        .file('./logs/petrucci.log')
+        .remove('console')
+        .level('silly');
 
     if(nconf.get('MAMBO_BACKEND')){
         Petrucci.createAll().then(function(){
