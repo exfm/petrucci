@@ -29,7 +29,7 @@ describe("Model", function(){
     });
 
     it("should subscribe to a playset by token", function(done){
-        var token = 'nonexistantuser:user:totallyarealuser:0',
+        var token = 'nonexistantuser:user:totallyarealuser:1355331600547',
             id = common.getIdFromToken(token),
             redis_client = redis.createClient(redisInfo.port, redisInfo.host),
             subscribeCallback;
@@ -51,7 +51,7 @@ describe("Model", function(){
     });
 
     it("should get subscribed tokens for an id", function(done){
-        var token = 'grmnygrmny:user:dan:0',
+        var token = 'grmnygrmny:user:dan:1355331600547',
             id = common.getIdFromToken(token);
 
         helpers.petrucciIds.push(id);
@@ -68,7 +68,7 @@ describe("Model", function(){
     });
 
     it("should unsubscribe a token from an id", function(done){
-        var token = 'grmnygrmny:user:dan:0',
+        var token = 'grmnygrmny:user:dan:1355331600547',
             id = common.getIdFromToken(token);
 
         helpers.petrucciIds.push(id);
@@ -90,9 +90,9 @@ describe("Model", function(){
 
     it("should add new songs to shuffle via the shuffle api", function(done){
         var tokens = [
-                'grmnygrmny:user:dan:0',
-                'grmnygrmny:user:jm:0',
-                'grmnygrmny:user:majman:0'
+                'grmnygrmny:user:dan:1355331600547',
+                'grmnygrmny:user:jm:1355331600547',
+                'grmnygrmny:user:majman:1355331600547'
             ], newSongs = [
                 18073540,
                 38474140,
