@@ -44,7 +44,7 @@ exports.listeners = [];
 
 plog
     .find(/^petrucci/)
-    .file(__dirname + '/../logs/petrucci.log')
+    .file(process.env.PWD + '/logs/petrucci.log')
     .remove('console')
     .level('silly');
 
