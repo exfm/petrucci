@@ -25,7 +25,8 @@
         "express-winston": "0.1.2",
         "superagent": "0.10.0",
         "commander": "1.1.1",
-        "plog": "0.0.4"
+        "plog": "0.0.4",
+        "stream": "0.0.1"
     },
     "devDependencies": {
         "mocha": "1.6.0",
