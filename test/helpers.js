@@ -45,6 +45,7 @@ exports.listeners = [];
 plog
     .find(/^petrucci/)
     .file('./logs/petrucci.log')
+    .remove('console')
     .level('silly');
 
 exports.setup = function(cb){
