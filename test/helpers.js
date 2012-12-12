@@ -42,11 +42,11 @@ var server = null;
 exports.petrucciIds = [];
 exports.listeners = [];
 
-plog
-    .find(/^petrucci/)
-    .file(process.env.PWD + '/logs/petrucci.log')
-    .remove('console')
-    .level('silly');
+// plog
+//     .find(/^petrucci/)
+//     .file(process.env.PWD + '/logs/petrucci.log')
+//     .remove('console')
+//     .level('silly');
 
 exports.setup = function(cb){
     sequence().then(function(next){

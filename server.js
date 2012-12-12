@@ -40,11 +40,11 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
         'secret': nconf.get("aws:secret")
     });
 
-    plog
-        .find(/^petrucci/)
-        .file(process.env.PWD + '/logs/petrucci.log')
-        .remove('console')
-        .level('silly');
+    // plog
+    //     .find(/^petrucci/)
+    //     .file(process.env.PWD + '/logs/petrucci.log')
+    //     .remove('console')
+    //     .level('silly');
 
     if(nconf.get('MAMBO_BACKEND')){
         Petrucci.createAll().then(function(){
