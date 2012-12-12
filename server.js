@@ -30,9 +30,6 @@ nconf.defaults({
 getConfig(nconf.get("NODE_ENV")).then(function(config){
     nconf.overrides(config);
 
-    // Update logger with remote settings.
-    app.log = winston.loggers.add("app", nconf.get('logging'));
-
     // Setup the model level
     app.model.connect(nconf.get("aws:key"), nconf.get("aws:secret"),
         nconf.get("table_prefix"));
@@ -45,7 +42,7 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
 
     plog
         .find(/^petrucci/)
-        .file(__dirname + '/logs/petrucci.log')
+        .file(process.env.PWD + '/logs/petrucci.log')
         .remove('console')
         .level('silly');
 
