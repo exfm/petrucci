@@ -50,22 +50,19 @@ describe("API", function(){
     it("should subscribe to a playset and add new songs to shuffle via shuffle api", function(done){
         var token = 'totallyarealuser:user:someotheruser:0',
             id = common.getIdFromToken(token),
-            newSongs = [
-                18073540,
-                38474140,
-                33285435
-            ],
-            newSongsBase36 = [],
+            newSongObject = {
+                'song_ids': [
+                    18073540,
+                    38474140,
+                    33285435
+                ]
+            },
             redis_client = redis.createClient(redisInfo.port, redisInfo.host),
             newSongsCallback;
 
-        newSongs.map(function(s){
-            newSongsBase36.push(common.base36encode(s));
-        });
-
         newSongsCallback = function(nS){
             assert.deepEqual([token], nS.tokens);
-            assert.deepEqual(newSongs, nS.new_songs);
+            assert.deepEqual(newSongObject.song_ids, nS.new_songs);
             done();
         };
         Petrucci.on('newSongs', newSongsCallback);
@@ -85,7 +82,7 @@ describe("API", function(){
                 if (res.statusCode !== 200){
                     throw new Error(res.body);
                 }
-                return redis_client.publish(common.getRedisChannelFromId(id), JSON.stringify(newSongsBase36));
+                return redis_client.publish(common.getRedisChannelFromId(id), JSON.stringify(newSongObject));
             });
     });
 
