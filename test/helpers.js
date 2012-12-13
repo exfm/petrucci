@@ -80,8 +80,7 @@ exports.setup = function(cb){
             next();
         }
     }).then(function(next){
-        app.connectRedis();
-        cb();
+        app.connectRedis().then(cb);
     });
 };
 
