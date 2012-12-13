@@ -51,14 +51,12 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
             console.log('All tables created in magneto');
         });
     }
-    app.connectRedis();
+    app.connectRedis().then(function(){
+        app.listen(nconf.get('port'), nconf.get('host'));
+        console.log('listening on ' + nconf.get('host') + ':' + nconf.get('port'));
+    });
 });
 
+// var server = http.createServer(app);
+// app.server = server;
 
-var server = http.createServer(app);
-app.server = server;
-
-module.exports = server;
-module.exports.nconf = nconf;
-
-// @todo (lucas) Listen for config changes
