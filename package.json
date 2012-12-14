@@ -21,7 +21,7 @@
         "junto": "git+ssh://git@github.com/exfm/node-junto.git",
         "nurse": "git://github.com/exfm/node-nurse.git",
         "redis": "0.8.2",
-        "plata": "git://github.com/grmnygrmny/node-plata.git",
+        "plata": "git://github.com/exfm/node-plata.git",
         "express-winston": "0.1.2",
         "superagent": "0.10.0",
         "commander": "1.1.1",
