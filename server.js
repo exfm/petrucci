@@ -53,7 +53,7 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
     }
     app.connectRedis().then(function(){
         app.listen(nconf.get('port'), nconf.get('host'));
-        console.log('listening on ' + nconf.get('host') + ':' + nconf.get('port'));
+        console.log('listening on ' + nconf.get('host') + ':' + nconf.get('port')); // @todo log.info
     });
 });
 
