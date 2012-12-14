@@ -58,7 +58,7 @@ describe("Model", function(){
         sequence(this).then(function(next){
             Petrucci.subscribeToPlayset(token).then(next);
         }).then(function(next, petrucci){
-            Petrucci.getTokens(id).then(function(p){
+            Petrucci.getById(id).then(function(p){
                 assert.deepEqual([token], p.tokens);
                 done();
             }, function(){
@@ -79,7 +79,7 @@ describe("Model", function(){
                 throw new Error('Unable to unsubscribe from channel');
             });
         }).then(function(next){
-            Petrucci.getTokens(id).then(function(p){
+            Petrucci.getById(id).then(function(p){
                 helpers.petrucciIds.splice(helpers.petrucciIds.indexOf(id), 1);
                 done();
             }, function(){

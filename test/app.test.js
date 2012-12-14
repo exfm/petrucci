@@ -104,7 +104,7 @@ describe("API", function(){
                 if (res.statusCode !== 200){
                     throw new Error(res.body);
                 }
-                Petrucci.getTokens(id).then(function(p){
+                Petrucci.getById(id).then(function(p){
                     helpers.petrucciIds.splice(helpers.petrucciIds.indexOf(id), 1);
                     done();
                 }, function(){
