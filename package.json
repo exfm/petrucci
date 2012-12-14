@@ -1,5 +1,5 @@
 {
-    "author": " <>",
+    "author": "Drew Harris <grmnygrmny>",
     "name": "petrucci",
     "description": "Redis event watcher for the exfm shuffle service",
     "version": "0.0.0",

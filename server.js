@@ -40,12 +40,6 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
         'secret': nconf.get("aws:secret")
     });
 
-    // plog
-    //     .find(/^petrucci/)
-    //     .file(process.env.PWD + '/logs/petrucci.log')
-    //     .remove('console')
-    //     .level('silly');
-
     if(nconf.get('MAMBO_BACKEND')){
         Petrucci.createAll().then(function(){
             console.log('All tables created in magneto');
@@ -56,7 +50,3 @@ getConfig(nconf.get("NODE_ENV")).then(function(config){
         console.log('listening on ' + nconf.get('host') + ':' + nconf.get('port')); // @todo log.info
     });
 });
-
-// var server = http.createServer(app);
-// app.server = server;
-
